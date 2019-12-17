@@ -107,7 +107,6 @@ namespace BizzyBeeGames.WordGame
 		{
 			// Show the main screen
 			UIScreenController.Instance.Show(UIScreenController.CategoriesScreenId);
-            RateGame.Instance.ShowRatePopup();
 		}
 
 		public void OnContinueButtonClicked()

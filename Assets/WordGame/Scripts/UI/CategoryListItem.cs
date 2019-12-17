@@ -42,7 +42,6 @@ namespace BizzyBeeGames.WordGame
 		{
 			// Show the category levels screen
 			UIScreenController.Instance.Show(UIScreenController.CategoryLevelsScreenId, false, true, false, Tween.TweenStyle.EaseOut, null, categoryName);
-            RateGame.Instance.ShowRatePopup();
 		}
 
 		#endregion
