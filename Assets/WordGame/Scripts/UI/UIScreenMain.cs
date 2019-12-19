@@ -4,120 +4,134 @@ using System.Collections;
 
 namespace BizzyBeeGames.WordGame
 {
-	public class UIScreenMain : UIScreen
-	{
-		#region Inspector Variables
+    public class UIScreenMain : UIScreen
+    {
+        #region Inspector Variables
 
-		[Space]
+        [Space]
 
-		[SerializeField] private ProgressRing	progressRing;
-		[SerializeField] private Text			continueBtnTopText;
-		[SerializeField] private Text			continueBtnBottomText;
-		[SerializeField] private Image			continueBtnImage;
+        [SerializeField] private ProgressRing progressRing;
+        [SerializeField] private Text continueBtnTopText;
+        [SerializeField] private Text continueBtnBottomText;
+        [SerializeField] private Image continueBtnImage;
 
-		#endregion
 
-		#region Member Variables
+        #endregion
 
-		private string	continueBtnCategory;
-		private int		continueBtnLevelIndex;
+        #region Member Variables
 
-		#endregion
+        private string continueBtnCategory;
+        private int continueBtnLevelIndex;
 
-		#region Public Methods
 
-		public override void OnShowing(object data)
-		{
-			base.OnShowing(data);
+        #endregion
 
-			// Set the progress rings percentage to the number of completed levels from all categories
-			int totalNumberOfLevels				= 0;
-			int totalNumberOfCompletedLevels	= 0;
+        #region Public Methods
 
-			for (int i = 0; i < GameManager.Instance.CategoryInfos.Count; i++)
-			{
-				CategoryInfo categoryInfo = GameManager.Instance.CategoryInfos[i];
 
-				// Only include levels that are not part of the paily puzzle category
-				if (categoryInfo.name != GameManager.dailyPuzzleId)
-				{
-					totalNumberOfLevels				+= categoryInfo.levelInfos.Count;
-					totalNumberOfCompletedLevels	+= GameManager.Instance.GetCompletedLevelCount(categoryInfo);
-				}
-			}
+        public override void OnShowing(object data)
+        {
+            base.OnShowing(data);
 
-			progressRing.SetProgress((float)totalNumberOfCompletedLevels / (float)totalNumberOfLevels);
+            // Set the progress rings percentage to the number of completed levels from all categories
+            int totalNumberOfLevels = 0;
+            int totalNumberOfCompletedLevels = 0;
 
-			// Set the Continue button to the active category
-			if (string.IsNullOrEmpty(GameManager.Instance.ActiveCategory) || GameManager.Instance.ActiveCategory == GameManager.dailyPuzzleId)
-			{
-				bool foundUncompletedLevel = false;
+            for (int i = 0; i < GameManager.Instance.CategoryInfos.Count; i++)
+            {
+                CategoryInfo categoryInfo = GameManager.Instance.CategoryInfos[i];
 
-				for (int i = 0; i < GameManager.Instance.CategoryInfos.Count; i++)
-				{
-					CategoryInfo categoryInfo = GameManager.Instance.CategoryInfos[i];
+                // Only include levels that are not part of the paily puzzle category
+                if (categoryInfo.name != GameManager.dailyPuzzleId)
+                {
+                    totalNumberOfLevels += categoryInfo.levelInfos.Count;
+                    totalNumberOfCompletedLevels += GameManager.Instance.GetCompletedLevelCount(categoryInfo);
+                }
+            }
 
-					if (categoryInfo.name == GameManager.dailyPuzzleId)
-					{
-						continue;
-					}
+            progressRing.SetProgress((float)totalNumberOfCompletedLevels / (float)totalNumberOfLevels);
 
-					for (int j = 0; j < categoryInfo.levelInfos.Count; j++)
-					{
-						if (!GameManager.Instance.IsLevelCompleted(categoryInfo, j))
-						{
-							continueBtnCategory		= categoryInfo.name;
-							continueBtnLevelIndex	= j;
-							foundUncompletedLevel	= true;
+            GameSingleton.Instance.porcentajecompletado = Mathf.RoundToInt((float)totalNumberOfCompletedLevels / (float)totalNumberOfLevels * 100f);
 
-							break;
-						}
-					}
+            GameSingleton.Instance.tnol = totalNumberOfLevels;
+            GameSingleton.Instance.tncl = totalNumberOfCompletedLevels;
 
-					if (foundUncompletedLevel)
-					{
-						break;
-					}
-				}
 
-				// If all levels are completed then set the button to the first category and first level
-				if (!foundUncompletedLevel)
-				{
-					continueBtnCategory		= GameManager.Instance.CategoryInfos[0].name;
-					continueBtnLevelIndex	= 0;
-				}
-				
-				continueBtnTopText.text	= "PLAY";
-			}
-			else
-			{
-				continueBtnCategory		= GameManager.Instance.ActiveCategory;
-				continueBtnLevelIndex	= GameManager.Instance.ActiveLevelIndex;
+            // Set the Continue button to the active category
+            if (string.IsNullOrEmpty(GameManager.Instance.ActiveCategory) || GameManager.Instance.ActiveCategory == GameManager.dailyPuzzleId)
+            {
+                bool foundUncompletedLevel = false;
 
-				continueBtnTopText.text = "CONTINUE";
-			}
+                for (int i = 0; i < GameManager.Instance.CategoryInfos.Count; i++)
+                {
+                    CategoryInfo categoryInfo = GameManager.Instance.CategoryInfos[i];
 
-			CategoryInfo contineCategoryInfo = GameManager.Instance.GetCategoryInfo(continueBtnCategory);
+                    if (categoryInfo.name == GameManager.dailyPuzzleId)
+                    {
+                        continue;
+                    }
 
-			continueBtnBottomText.text	= string.Format("{0} LEVEL {1}", contineCategoryInfo.displayName.ToUpper(), continueBtnLevelIndex + 1);
-			continueBtnImage.sprite		= contineCategoryInfo.icon;
-		}
+                    for (int j = 0; j < categoryInfo.levelInfos.Count; j++)
+                    {
+                        if (!GameManager.Instance.IsLevelCompleted(categoryInfo, j))
+                        {
+                            continueBtnCategory = categoryInfo.name;
+                            continueBtnLevelIndex = j;
+                            foundUncompletedLevel = true;
 
-		public void OnCategoryButtonClicked()
-		{
-			// Show the main screen
-			UIScreenController.Instance.Show(UIScreenController.CategoriesScreenId);
-		}
+                            break;
+                        }
+                    }
 
-		public void OnContinueButtonClicked()
-		{
-			// Start the level the button is tied to
-			GameManager.Instance.StartLevel(continueBtnCategory, continueBtnLevelIndex);
+                    if (foundUncompletedLevel)
+                    {
+                        break;
+                    }
+                }
 
-			// Show the game screen
-			UIScreenController.Instance.Show(UIScreenController.GameScreenId);
-		}
+                // If all levels are completed then set the button to the first category and first level
+                if (!foundUncompletedLevel)
+                {
+                    continueBtnCategory = GameManager.Instance.CategoryInfos[0].name;
+                    continueBtnLevelIndex = 0;
+                }
 
-		#endregion
-	}
+                continueBtnTopText.text = "PLAY";
+            }
+            else
+            {
+                continueBtnCategory = GameManager.Instance.ActiveCategory;
+                continueBtnLevelIndex = GameManager.Instance.ActiveLevelIndex;
+
+                continueBtnTopText.text = "CONTINUE";
+            }
+
+            CategoryInfo contineCategoryInfo = GameManager.Instance.GetCategoryInfo(continueBtnCategory);
+
+            continueBtnBottomText.text = string.Format("{0} LEVEL {1}", contineCategoryInfo.displayName.ToUpper(), continueBtnLevelIndex + 1);
+            continueBtnImage.sprite = contineCategoryInfo.icon;
+        }
+
+        public void OnCategoryButtonClicked()
+        {
+            // Show the main screen
+            UIScreenController.Instance.Show(UIScreenController.CategoriesScreenId);
+            GameSingleton.Instance.porcentajecompletado = Mathf.RoundToInt((float)GameSingleton.Instance.tncl / (float)GameSingleton.Instance.tnol * 100f);
+            RateGame.Instance.ShowRatePopup();
+        }
+
+        public void OnContinueButtonClicked()
+        {
+
+            // Start the level the button is tied to
+            GameManager.Instance.StartLevel(continueBtnCategory, continueBtnLevelIndex);
+
+            // Show the game screen
+            UIScreenController.Instance.Show(UIScreenController.GameScreenId);
+
+
+        }
+
+        #endregion
+    }
 }

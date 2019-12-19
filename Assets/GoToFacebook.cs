@@ -6,6 +6,6 @@ public class GoToFacebook : MonoBehaviour
 {
     public void Facebook()
     {
-        Application.OpenURL("https://www.facebook.com/dmnte");
+        Application.OpenURL("https://compiled.social/Dmnte");
     }
 }

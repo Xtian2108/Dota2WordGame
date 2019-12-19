@@ -10,7 +10,7 @@ namespace BizzyBeeGames.WordGame
 
 		[SerializeField] private RectTransform	firstHalf;
 		[SerializeField] private RectTransform	secondHalf;
-		[SerializeField] private Text 			percentText;
+		[SerializeField] public Text 			percentText;
 
 		#endregion
 
