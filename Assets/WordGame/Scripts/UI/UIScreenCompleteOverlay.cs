@@ -56,8 +56,19 @@ namespace BizzyBeeGames.WordGame
                 }
             }
             GameSingleton.Instance.porcentajecompletado = Mathf.RoundToInt((float)totalNumberOfCompletedLevels / (float)totalNumberOfLevels * 100f);
+
+            Tween.ScaleX(categoryIconImage.GetComponent<RectTransform>(), Tween.TweenStyle.EaseOut, 0f, 1f, 1050f);
+            Tween.ScaleY(categoryIconImage.GetComponent<RectTransform>(), Tween.TweenStyle.EaseOut, 0f, 1f, 1050f);
+            StartCoroutine(Regresar());
+
         }
 
         #endregion
+        public IEnumerator Regresar()
+        {
+            yield return new WaitForSeconds(2.0f);
+            Tween.ScaleX(categoryIconImage.GetComponent<RectTransform>(), Tween.TweenStyle.EaseOut, 1f, 0f, 1050f);
+            Tween.ScaleY(categoryIconImage.GetComponent<RectTransform>(), Tween.TweenStyle.EaseOut, 1f, 0f, 1050f);
+        }
     }
 }
