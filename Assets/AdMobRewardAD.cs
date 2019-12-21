@@ -19,11 +19,14 @@ namespace BizzyBeeGames.WordGame
         // Use this for initialization
         void Start()
         {
+            
             MobileAds.Initialize(androidRewardedID);
             rewardedVideo = RewardBasedVideoAd.Instance;
             rewardedVideo.OnAdRewarded += HandleRewardBasedVideoRewarded;
             rewardedVideo.OnAdClosed += HandleRewardBasedVideoClosed;
             RequestRewardVideo();
+            AdRequest request = new AdRequest.Builder().Build();
+            rewardedVideo.LoadAd(request, androidRewardedID);
         }
 
         public void ShowRewardedVideo()
