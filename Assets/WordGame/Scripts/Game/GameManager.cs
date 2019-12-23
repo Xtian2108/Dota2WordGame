@@ -353,7 +353,7 @@ namespace BizzyBeeGames.WordGame
 		{
 			string boardId = Utilities.FormatBoardId(categoryInfo.name, levelIndex);
 			return CompletedLevels.ContainsKey(boardId) && CompletedLevels[boardId];
-		}
+        }
 
 		/// <summary>
 		/// Returns the number of completed levels for the given category

@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
+
 
 namespace BizzyBeeGames.WordGame
 {
@@ -11,12 +13,13 @@ namespace BizzyBeeGames.WordGame
         private static GameSingleton _instance;
         public Sprite divisonActual;
         public Sprite[] divisiones;
-        public int porcentajecompletado;
         public Image rankTier;
-        public float tnol;
-        public float tncl;
 
-        public int numPantalla;
+
+        public float totales;
+        public float completos;
+        public int porcentajecompletado;
+        public GameObject showvideo;
 
         public static GameSingleton Instance
         {
@@ -40,6 +43,7 @@ namespace BizzyBeeGames.WordGame
         // Use this for initialization
         void Start()
         {
+
 
         }
 
@@ -90,13 +94,23 @@ namespace BizzyBeeGames.WordGame
             {
                 divisonActual = divisiones[8];
             }
-            else if (porcentajecompletado > 90 && porcentajecompletado < 100)
+            else if (porcentajecompletado > 90 && porcentajecompletado < 110)
             {
                 divisonActual = divisiones[9];
             }
 
             rankTier.sprite = divisonActual;
 
+            porcentajecompletado = Mathf.RoundToInt((float)completos / (float)totales * 100f);
+
         }
+
+        public IEnumerator MostrarTutorial()
+        {       
+            showvideo.SetActive(true);
+            yield return new WaitForSeconds(10f);
+            showvideo.SetActive(false);
+        }
+
     }
 }
